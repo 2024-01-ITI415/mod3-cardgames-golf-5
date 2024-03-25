@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
+<<<<<<< Updated upstream
 public class SlotDef
+=======
+public class SlotDef 
+>>>>>>> Stashed changes
 {
     public float x;
     public float y;
@@ -19,6 +23,7 @@ public class Layout : MonoBehaviour
 {
     public PT_XMLReader xmlr;
     public PT_XMLHashtable xml;
+<<<<<<< Updated upstream
     public Vector2 multiplier;
     public List<SlotDef> slotDefs;
     public SlotDef drawPile;
@@ -46,14 +51,48 @@ public class Layout : MonoBehaviour
                 tSD.type = slotsX[i].att("type");
             }
             else
+=======
+    public Vector2 multiplier; 
+    public List<SlotDef> slotDefs;
+    public SlotDef drawPile;
+    public SlotDef discardPile;
+    public string[] sortingLayerNames = new string[] {"Row0", "Row1", "Row2", "Row3", "Discard", "Draw"};
+
+    public void ReadLayout (string xmlText)
+    {
+        xmlr = new PT_XMLReader();
+        xmlr.Parse(xmlText);
+        xml = xmlr.xml ["xml"] [0];
+
+        multiplier.x = float.Parse(xml["multiplier"] [0].att("x"));
+        multiplier.y = float.Parse(xml["multiplier"] [0].att("y"));
+
+        SlotDef tSD; 
+
+        PT_XMLHashList slotsX = xml["slot"];
+
+        for (int i=0; i<slotsX.Count; i++) 
+        {
+            tSD = new SlotDef();
+            if (slotsX[i].HasAtt("type")) 
+            {
+                tSD.type = slotsX[i].att("type");
+            }
+            else 
+>>>>>>> Stashed changes
             {
                 tSD.type = "slot";
             }
             tSD.x = float.Parse(slotsX[i].att("x"));
             tSD.y = float.Parse(slotsX[i].att("y"));
             tSD.layerID = int.Parse(slotsX[i].att("layer"));
+<<<<<<< Updated upstream
             tSD.layerName = sortingLayerNames[tSD.layerID];
             switch (tSD.type)
+=======
+            tSD.layerName = sortingLayerNames [tSD.layerID];
+            switch (tSD.type) 
+>>>>>>> Stashed changes
             {
                 case "slot":
                     tSD.faceUp = (slotsX[i].att("faceup") == "1");
@@ -61,7 +100,11 @@ public class Layout : MonoBehaviour
                     if (slotsX[i].HasAtt("hiddenby"))
                     {
                         string[] hiding = slotsX[i].att("hiddenby").Split(',');
+<<<<<<< Updated upstream
                         foreach (string s in hiding)
+=======
+                        foreach(string s in hiding)
+>>>>>>> Stashed changes
                         {
                             tSD.hiddenBy.Add(int.Parse(s));
                         }
@@ -78,4 +121,8 @@ public class Layout : MonoBehaviour
             }
         }
     }
+<<<<<<< Updated upstream
 }
+=======
+}
+>>>>>>> Stashed changes
