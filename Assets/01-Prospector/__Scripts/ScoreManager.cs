@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum eScoreEvent
+public enum eScoreEvent 
 {
     draw,
     mine,
@@ -37,7 +37,7 @@ public class ScoreManager : MonoBehaviour
         {
             HIGH_SCORE = PlayerPrefs.GetInt("ProspectorHighScore");
         }
-        score += SCORE_FROM_PREV_ROUND;
+        score +=    SCORE_FROM_PREV_ROUND;
         SCORE_FROM_PREV_ROUND = 0;
     }
     static public void EVENT(eScoreEvent evt)
@@ -48,10 +48,10 @@ public class ScoreManager : MonoBehaviour
         }
         catch (System.NullReferenceException nre)
         {
-            Debug.LogError("ScoreManager:EVENT() called while S=null.\n" + nre);
+            Debug.LogError("ScoreManager:EVENT() called while S=null.\n"+nre);
         }
     }
-    void Event(eScoreEvent evt)
+    void Event (eScoreEvent evt)
     {
         switch (evt)
         {
@@ -62,7 +62,7 @@ public class ScoreManager : MonoBehaviour
                 score += scoreRun;
                 scoreRun = 0;
                 break;
-
+            
             case eScoreEvent.mine:
                 chain++;
                 scoreRun += chain;
@@ -72,27 +72,27 @@ public class ScoreManager : MonoBehaviour
         {
             case eScoreEvent.gameWin:
                 SCORE_FROM_PREV_ROUND = score;
-                print("You won this round! Round score: " + score);
+                print("You won this round! Round score: "+score);
                 break;
-
+            
             case eScoreEvent.gameLoss:
                 if (HIGH_SCORE <= score)
                 {
-                    print("You got the high score! High score: " + score);
+                    print("You got the high score! High score: "+score);
                     HIGH_SCORE = score;
                     PlayerPrefs.SetInt("ProspectorHighScore", score);
                 }
-                else
+                else 
                 {
-                    print("Your final score for the game was: " + score);
+                    print("Your final score for the game was: "+score);
                 }
                 break;
             default:
-                print("score: " + score + " scoreRun:" + scoreRun + " chain:" + chain);
+                print("score: "+score+" scoreRun:"+scoreRun+" chain:"+chain);
                 break;
         }
     }
-    static public int CHAIN { get { return S.chain; } }
-    static public int SCORE { get { return S.score; } }
-    static public int SCORE_RUN { get { return S.scoreRun; } }
+    static public int CHAIN {get{return S.chain;}}
+    static public int SCORE {get{return S.score;}}
+    static public int SCORE_RUN {get{return S.scoreRun;}}
 }

@@ -8,21 +8,21 @@ public class ScoreBoard : MonoBehaviour
     public static ScoreBoard S;
 
     [Header("Set in Inspector")]
-    public GameObject prefabFloatingScore;
+    public GameObject       prefabFloatingScore;
 
     [Header("Set Dynamically")]
-    [SerializeField] private int _score = 0;
+    [SerializeField] private int    _score = 0;
     [SerializeField] private string _scoreString;
 
-    private Transform canvasTrans;
+    private Transform        canvasTrans;
 
-    public int score
+    public int score 
     {
         get
         {
-            return (_score);
+            return(_score);
         }
-        set
+        set 
         {
             _score = value;
             scoreString = _score.ToString("N0");
@@ -30,9 +30,9 @@ public class ScoreBoard : MonoBehaviour
     }
     public string scoreString
     {
-        get
+        get 
         {
-            return (_scoreString);
+            return(_scoreString);
         }
         set
         {
@@ -46,24 +46,24 @@ public class ScoreBoard : MonoBehaviour
         {
             S = this;
         }
-        else
+        else 
         {
             Debug.LogError("ERROR: Scoreboard.Awake(): S is already set!");
         }
         canvasTrans = transform.parent;
     }
-    public void FSCallbacl(FloatingScore fs)
+    public void FSCallback(FloatingScore fs)
     {
         score += fs.score;
     }
     public FloatingScore CreateFloatingScore(int amt, List<Vector2> pts)
     {
-        GameObject go = Instantiate<GameObject>(prefabFloatingScore);
-        go.transform.SetParent(canvasTrans);
+        GameObject go = Instantiate <GameObject> (prefabFloatingScore);
+        go.transform.SetParent (canvasTrans);
         FloatingScore fs = go.GetComponent<FloatingScore>();
         fs.score = amt;
         fs.reportFinishTo = this.gameObject;
         fs.Init(pts);
-        return (fs);
+        return(fs);
     }
 }

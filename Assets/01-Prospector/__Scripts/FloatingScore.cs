@@ -15,17 +15,17 @@ public enum eFSState
 public class FloatingScore : MonoBehaviour
 {
     [Header("Set Dynamically")]
-    public eFSState state = eFSState.idle;
+    public eFSState         state = eFSState.idle;
 
     [SerializeField]
-    protected int _score = 0;
-    public string scoreString;
+    protected int           _score = 0;
+    public string           scoreString;
 
-    public int score
+    public int score 
     {
         get
         {
-            return (_score);
+            return(_score);
         }
         set
         {
@@ -34,16 +34,16 @@ public class FloatingScore : MonoBehaviour
             GetComponent<Text>().text = scoreString;
         }
     }
-    public List<Vector2> bezierPts;
-    public List<float> fontSizes;
-    public float timeStart = -1f;
-    public float timeDuration = 1f;
-    public string easingCurve = Easing.InOut;
+    public List<Vector2>    bezierPts;
+    public List<float>      fontSizes;
+    public float            timeStart = -1f;
+    public float            timeDuration = 1f;
+    public string           easingCurve = Easing.InOut;
 
-    public GameObject reportFinishTo = null;
+    public GameObject       reportFinishTo = null;
 
-    private RectTransform rectTrans;
-    private Text txt;
+    private RectTransform   rectTrans;
+    private Text            txt;
 
     public void Init(List<Vector2> ePts, float eTimeS = 0, float eTimeD = 1)
     {
@@ -72,23 +72,24 @@ public class FloatingScore : MonoBehaviour
     {
         if (state == eFSState.idle) return;
 
-        float u = (Time.time - timeStart) / timeDuration;
-        float uC = Easing.Ease(u, easingCurve);
-        if (u < 0)
+        float u = (Time.time - timeStart)/timeDuration;
+        float uC = Easing.Ease (u, easingCurve);
+        if (u<0) 
         {
             state = eFSState.pre;
-            txt.enabled = false;
+            txt.enabled= false;
         }
         else
         {
-            if (u >= 1)
+            if (u>=1)
             {
                 uC = 1;
                 state = eFSState.post;
                 if (reportFinishTo != null)
                 {
                     reportFinishTo.SendMessage("FSCallback", this);
-                    Destroy(gameObject);
+                    //reportFinishTo.GetComponent<ScoreBoard>().FSCallback(this);
+                    Destroy (gameObject);
                 }
                 else
                 {
@@ -102,7 +103,7 @@ public class FloatingScore : MonoBehaviour
             }
             Vector2 pos = Utils.Bezier(uC, bezierPts);
             rectTrans.anchorMin = rectTrans.anchorMax = pos;
-            if (fontSizes != null && fontSizes.Count > 0)
+            if (fontSizes != null && fontSizes.Count>0)
             {
                 int size = Mathf.RoundToInt(Utils.Bezier(uC, fontSizes));
                 GetComponent<Text>().fontSize = size;
