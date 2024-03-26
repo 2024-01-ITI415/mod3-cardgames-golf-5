@@ -2,11 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-<<<<<<< Updated upstream
 public enum eScoreEvent
-=======
-public enum eScoreEvent 
->>>>>>> Stashed changes
 {
     draw,
     mine,
@@ -41,11 +37,7 @@ public class ScoreManager : MonoBehaviour
         {
             HIGH_SCORE = PlayerPrefs.GetInt("ProspectorHighScore");
         }
-<<<<<<< Updated upstream
         score += SCORE_FROM_PREV_ROUND;
-=======
-        score +=    SCORE_FROM_PREV_ROUND;
->>>>>>> Stashed changes
         SCORE_FROM_PREV_ROUND = 0;
     }
     static public void EVENT(eScoreEvent evt)
@@ -56,17 +48,10 @@ public class ScoreManager : MonoBehaviour
         }
         catch (System.NullReferenceException nre)
         {
-<<<<<<< Updated upstream
             Debug.LogError("ScoreManager:EVENT() called while S=null.\n" + nre);
         }
     }
     void Event(eScoreEvent evt)
-=======
-            Debug.LogError("ScoreManager:EVENT() called while S=null.\n"+nre);
-        }
-    }
-    void Event (eScoreEvent evt)
->>>>>>> Stashed changes
     {
         switch (evt)
         {
@@ -77,11 +62,7 @@ public class ScoreManager : MonoBehaviour
                 score += scoreRun;
                 scoreRun = 0;
                 break;
-<<<<<<< Updated upstream
 
-=======
-            
->>>>>>> Stashed changes
             case eScoreEvent.mine:
                 chain++;
                 scoreRun += chain;
@@ -91,7 +72,6 @@ public class ScoreManager : MonoBehaviour
         {
             case eScoreEvent.gameWin:
                 SCORE_FROM_PREV_ROUND = score;
-<<<<<<< Updated upstream
                 print("You won this round! Round score: " + score);
                 break;
 
@@ -116,29 +96,3 @@ public class ScoreManager : MonoBehaviour
     static public int SCORE { get { return S.score; } }
     static public int SCORE_RUN { get { return S.scoreRun; } }
 }
-=======
-                print("You won this round! Round score: "+score);
-                break;
-            
-            case eScoreEvent.gameLoss:
-                if (HIGH_SCORE <= score)
-                {
-                    print("You got the high score! High score: "+score);
-                    HIGH_SCORE = score;
-                    PlayerPrefs.SetInt("ProspectorHighScore", score);
-                }
-                else 
-                {
-                    print("Your final score for the game was: "+score);
-                }
-                break;
-            default:
-                print("score: "+score+" scoreRun:"+scoreRun+" chain:"+chain);
-                break;
-        }
-    }
-    static public int CHAIN {get{return S.chain;}}
-    static public int SCORE {get{return S.score;}}
-    static public int SCORE_RUN {get{return S.scoreRun;}}
-}
->>>>>>> Stashed changes

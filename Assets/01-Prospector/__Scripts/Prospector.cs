@@ -113,6 +113,10 @@ public class Prospector : MonoBehaviour
             layoutAnchor = tGO.transform;
             layoutAnchor.transform.position = layoutCenter;
         }
+
+        // Initialize tableau list before using it
+        tableau = new List<CardProspector>();
+
         CardProspector cp;
         foreach (SlotDef tSD in layout.slotDefs)
         {
@@ -129,9 +133,8 @@ public class Prospector : MonoBehaviour
             cp.SetSortingLayerName(tSD.layerName);
 
             tableau.Add(cp);
-
-
         }
+
         foreach (CardProspector tCP in tableau)
         {
             foreach (int hid in tCP.slotDef.hiddenBy)
@@ -140,8 +143,8 @@ public class Prospector : MonoBehaviour
                 tCP.hiddenBy.Add(cp);
             }
         }
-        MoveToTarget(Draw());
 
+        MoveToTarget(Draw());
         UpdateDrawPile();
     }
     CardProspector FindCardByLayoutID(int layoutID)
