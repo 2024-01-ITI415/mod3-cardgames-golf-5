@@ -3,7 +3,17 @@ guid: cdf8229178eca404ab6996b287fb485f
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - deckXML: {fileID: 4900000, guid: c76312a0fb08948699e1abf935e4a957, type: 3}
+  - layoutXML: {fileID: 4900000, guid: 355ad3691c4ec4242ae04ebfd5ae78de, type: 3}
+  - gameOverText: {instanceID: 0}
+  - roundResultTest: {instanceID: 0}
+  - highScoreText: {instanceID: 0}
+  - deck: {instanceID: 0}
+  - layout: {instanceID: 0}
+  - layoutAnchor: {instanceID: 0}
+  - target: {instanceID: 0}
+  - fsRun: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
