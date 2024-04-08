@@ -48,7 +48,7 @@ namespace Golf
             {
                 highScoreText = go.GetComponent<Text>();
             }
-            int highScore = ScoreManager.HIGH_SCORE;
+            int highScore = ScoreManagerGolf.HIGH_SCORE;
             string hScore = "High Score: " + Utils.AddCommasToNumber(highScore);
             go.GetComponent<Text>().text = hScore;
 
@@ -73,7 +73,7 @@ namespace Golf
 
         void Start()
         {
-            ScoreBoard.S.score = ScoreManager.SCORE;
+            ScoreBoard.S.score = ScoreManagerGolf.SCORE;
             deck = GetComponent<Deck>();
             deck.InitDeck(deckXML.text);
             Deck.Shuffle(ref deck.cards);
@@ -237,7 +237,7 @@ namespace Golf
                     MoveToDiscard(target);
                     MoveToTarget(Draw());
                     UpdateDrawPile();
-                    ScoreManager.EVENT(eScoreEvent.draw);
+                    ScoreManagerGolf.EVENT(eScoreEvent.draw);
                     FloatingScoreHandler(eScoreEvent.draw);
                     break;
                 case eCardState.tableau:
@@ -254,7 +254,7 @@ namespace Golf
                     tableau.Remove(cg);
                     MoveToTarget(cg);
                     SetTableauFaces();
-                    ScoreManager.EVENT(eScoreEvent.mine);
+                    ScoreManagerGolf.EVENT(eScoreEvent.mine);
                     FloatingScoreHandler(eScoreEvent.mine);
                     break;
             }
@@ -284,20 +284,20 @@ namespace Golf
 
         void GameOver(bool won)
         {
-            int score = ScoreManager.SCORE;
+            int score = ScoreManagerGolf.SCORE;
             if (fsRun != null) score += fsRun.score;
             if (won)
             {
                 gameOverText.text = "Round Over";
                 roundResultTest.text = "You won this round!\nRound Score: " + score;
                 ShowResultsUI(true);
-                ScoreManager.EVENT(eScoreEvent.gameWin);
+                ScoreManagerGolf.EVENT(eScoreEvent.gameWin);
                 FloatingScoreHandler(eScoreEvent.gameWin);
             }
             else
             {
                 gameOverText.text = "Game Over";
-                if (ScoreManager.HIGH_SCORE <= score)
+                if (ScoreManagerGolf.HIGH_SCORE <= score)
                 {
                     string str = "You got the high score!\nHigh score: " + score;
                     roundResultTest.text = str;
@@ -307,7 +307,7 @@ namespace Golf
                     roundResultTest.text = "Your final score was: " + score;
                 }
                 ShowResultsUI(true);
-                ScoreManager.EVENT(eScoreEvent.gameLoss);
+                ScoreManagerGolf.EVENT(eScoreEvent.gameLoss);
                 FloatingScoreHandler(eScoreEvent.gameLoss);
             }
             Invoke("ReloadLevel", reloadDelay);
@@ -361,7 +361,7 @@ namespace Golf
                     fsPts.Add(p0);
                     fsPts.Add(fsPosMid);
                     fsPts.Add(fsPosRun);
-                    fs = ScoreBoard.S.CreateFloatingScore(ScoreManager.CHAIN, fsPts);
+                    fs = ScoreBoard.S.CreateFloatingScore(ScoreManagerGolf.CHAIN, fsPts);
                     fs.fontSizes = new List<float>(new float[] { 4, 50, 28 });
                     if (fsRun == null)
                     {
