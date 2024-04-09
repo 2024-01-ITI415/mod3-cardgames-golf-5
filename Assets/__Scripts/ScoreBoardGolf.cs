@@ -9,9 +9,6 @@ namespace Golf
     {
         public static ScoreBoard S;
 
-        [Header("Set in Inspector")]
-        public GameObject prefabFloatingScore;
-
         [Header("Set Dynamically")]
         [SerializeField] private int _score = 0;
         [SerializeField] private string _scoreString;
@@ -58,15 +55,6 @@ namespace Golf
         {
             score += fs.score;
         }
-        public FloatingScore CreateFloatingScore(int amt, List<Vector2> pts)
-        {
-            GameObject go = Instantiate<GameObject>(prefabFloatingScore);
-            go.transform.SetParent(canvasTrans);
-            FloatingScore fs = go.GetComponent<FloatingScore>();
-            fs.score = amt;
-            fs.reportFinishTo = this.gameObject;
-            fs.Init(pts);
-            return (fs);
-        }
+        
     }
 }

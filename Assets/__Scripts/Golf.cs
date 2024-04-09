@@ -33,7 +33,6 @@ namespace Golf
         public CardGolf target;
         public List<CardGolf> tableau;
         public List<CardGolf> discardPile;
-        public FloatingScore fsRun;
 
         void Awake()
         {
@@ -238,7 +237,6 @@ namespace Golf
                     MoveToTarget(Draw());
                     UpdateDrawPile();
                     ScoreManagerGolf.EVENT(eScoreEvent.draw);
-                    FloatingScoreHandler(eScoreEvent.draw);
                     break;
                 case eCardState.tableau:
                     bool validMatch = true;
@@ -255,7 +253,6 @@ namespace Golf
                     MoveToTarget(cg);
                     SetTableauFaces();
                     ScoreManagerGolf.EVENT(eScoreEvent.mine);
-                    FloatingScoreHandler(eScoreEvent.mine);
                     break;
             }
             CheckForGameOver();
@@ -285,14 +282,12 @@ namespace Golf
         void GameOver(bool won)
         {
             int score = ScoreManagerGolf.SCORE;
-            if (fsRun != null) score += fsRun.score;
             if (won)
             {
                 gameOverText.text = "Round Over";
                 roundResultTest.text = "You won this round!\nRound Score: " + score;
                 ShowResultsUI(true);
                 ScoreManagerGolf.EVENT(eScoreEvent.gameWin);
-                FloatingScoreHandler(eScoreEvent.gameWin);
             }
             else
             {
@@ -308,7 +303,6 @@ namespace Golf
                 }
                 ShowResultsUI(true);
                 ScoreManagerGolf.EVENT(eScoreEvent.gameLoss);
-                FloatingScoreHandler(eScoreEvent.gameLoss);
             }
             Invoke("ReloadLevel", reloadDelay);
         }
@@ -325,55 +319,12 @@ namespace Golf
             {
                 return true;
             }
-            if((c0.rank == 1 && c1.rank == 13) || (c0.rank == 13 && c1.rank == 1))
-    {
+            if ((c0.rank == 1 && c1.rank == 13) || (c0.rank == 13 && c1.rank == 1))
+            {
                 return false;
             }
             return false;
         }
 
-        void FloatingScoreHandler(eScoreEvent evt)
-        {
-            List<Vector2> fsPts;
-            switch (evt)
-            {
-                case eScoreEvent.draw:
-                case eScoreEvent.gameWin:
-                case eScoreEvent.gameLoss:
-                    if (fsRun != null)
-                    {
-                        fsPts = new List<Vector2>();
-                        fsPts.Add(fsPosRun);
-                        fsPts.Add(fsPosMid2);
-                        fsPts.Add(fsPosEnd);
-                        fsRun.reportFinishTo = ScoreBoard.S.gameObject;
-                        fsRun.Init(fsPts, 0, 1);
-                        fsRun.fontSizes = new List<float>(new float[] { 28, 36, 4 });
-                        fsRun = null;
-                    }
-                    break;
-                case eScoreEvent.mine:
-                    FloatingScore fs;
-                    Vector2 p0 = Input.mousePosition;
-                    p0.x /= Screen.width;
-                    p0.y /= Screen.height;
-                    fsPts = new List<Vector2>();
-                    fsPts.Add(p0);
-                    fsPts.Add(fsPosMid);
-                    fsPts.Add(fsPosRun);
-                    fs = ScoreBoard.S.CreateFloatingScore(ScoreManagerGolf.CHAIN, fsPts);
-                    fs.fontSizes = new List<float>(new float[] { 4, 50, 28 });
-                    if (fsRun == null)
-                    {
-                        fsRun = fs;
-                        fsRun.reportFinishTo = null;
-                    }
-                    else
-                    {
-                        fs.reportFinishTo = fsRun.gameObject;
-                    }
-                    break;
-            }
-        }
     }
 }
