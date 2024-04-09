@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Golf
@@ -7,23 +5,21 @@ namespace Golf
     public enum eScoreEvent
     {
         draw,
-        mine,
-        mineGold,
+        mine, // Renamed for clarity, consider 'tableauCleared' or similar if more appropriate
         gameWin,
-        gameLoss
+        gameLoss,
+        holeComplete // New event for completing a hole
     }
 
     public class ScoreManagerGolf : MonoBehaviour
     {
         static private ScoreManagerGolf S;
+        public int score = 0; // Represents the current score for the hole
+        public int totalScore = 0; // Total score across all holes
 
-        static public int SCORE_FROM_PREV_ROUND = 0;
-        static public int HIGH_SCORE = 0;
-
-        [Header("Set Dynamically")]
-        public int chain = 0;
-        public int scoreRun = 0;
-        public int score = 0;
+        [Header("Game Settings")]
+        public int holes = 9; // Number of holes (rounds) in a game
+        public int par = 45; // Par score for the game
 
         void Awake()
         {
@@ -33,69 +29,63 @@ namespace Golf
             }
             else
             {
-                Debug.LogError("ERROR: ScoreManager.Awake(): S is already set!");
-            }
-            if (PlayerPrefs.HasKey("ProspectorHighScore"))
-            {
-                HIGH_SCORE = PlayerPrefs.GetInt("ProspectorHighScore");
-            }
-            score += SCORE_FROM_PREV_ROUND;
-            SCORE_FROM_PREV_ROUND = 0;
-        }
-        static public void EVENT(eScoreEvent evt)
-        {
-            try
-            {
-                S.Event(evt);
-            }
-            catch (System.NullReferenceException nre)
-            {
-                Debug.LogError("ScoreManager:EVENT() called while S=null.\n" + nre);
+                Debug.LogError("ERROR: ScoreManagerGolf.Awake(): S is already set!");
             }
         }
-        void Event(eScoreEvent evt)
-        {
-            switch (evt)
-            {
-                case eScoreEvent.draw:
-                case eScoreEvent.gameWin:
-                case eScoreEvent.gameLoss:
-                    chain = 0;
-                    score += scoreRun;
-                    scoreRun = 0;
-                    break;
 
-                case eScoreEvent.mine:
-                    chain++;
-                    scoreRun += chain;
-                    break;
-            }
-            switch (evt)
+        public static void EVENT(eScoreEvent evt, int cardsLeft = 0)
+        { // cardsLeft parameter added
+            if (S == null)
             {
-                case eScoreEvent.gameWin:
-                    SCORE_FROM_PREV_ROUND = score;
-                    print("You won this round! Round score: " + score);
-                    break;
-
-                case eScoreEvent.gameLoss:
-                    if (HIGH_SCORE <= score)
-                    {
-                        print("You got the high score! High score: " + score);
-                        HIGH_SCORE = score;
-                        PlayerPrefs.SetInt("ProspectorHighScore", score);
-                    }
-                    else
-                    {
-                        print("Your final score for the game was: " + score);
-                    }
-                    break;
-                default:
-                    print("score: " + score + " scoreRun:" + scoreRun + " chain:" + chain);
-                    break;
+                Debug.LogError("ScoreManagerGolf.EVENT() called with no instance.");
+                return;
             }
+            S.HandleEvent(evt, cardsLeft);
         }
-        static public int CHAIN { get { return S.chain; } }
-        static public int SCORE { get { return S.score; } }
-        static public int SCORE_RUN { get { return S.scoreRun; } }
+
+        void HandleEvent(eScoreEvent evt, int cardsLeft)
+        {
+            if (evt == eScoreEvent.holeComplete)
+            {
+                if (cardsLeft > 0)
+                {
+                    // Score one point for each card remaining in the tableau
+                    score += cardsLeft;
+                }
+                else
+                {
+                    // If the tableau is cleared, score a negative point for every card left in the stock
+                    //score -= S.deck.cards.Count; // Assuming `S.deck.cards.Count` gives the remaining cards in the stock
+                    /*******************************/
+                }
+                totalScore += score;
+                CheckGameEnd();
+            }
+            else if (evt == eScoreEvent.gameWin)
+            {
+                // Logic for handling game win, potentially resetting for a new hole
+            }
+            else if (evt == eScoreEvent.gameLoss)
+            {
+                // Logic for handling game loss
+            }
+            // Additional event handling as needed
+        }
+
+        void CheckGameEnd()
+        {
+            if (totalScore <= par)
+            {
+                Debug.Log("Game over. Score: " + totalScore + " (Par or better!)");
+            }
+            else
+            {
+                Debug.Log("Game over. Score: " + totalScore);
+            }
+            // Implement logic for game end, e.g., showing results, resetting for a new game, etc.
+        }
+
+        public static int SCORE => S.score;
+        public static int HIGH_SCORE => S.totalScore;
     }
-} 
+}
